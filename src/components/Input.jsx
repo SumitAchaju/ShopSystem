@@ -1,28 +1,30 @@
 import React from "react";
 
-const Input = React.forwardRef(function(props,ref) {
+const Input = React.forwardRef(function (props, ref) {
   return (
     <>
       <input
-      ref={ref}
+        ref={ref}
         className={`form-control py-2 fs-5 ${props?.className}`}
         type={props.type}
         placeholder={props.placeHolder}
         name={props.name}
         id={props.id}
-        defaultValue={props.defaultValue?props.defaultValue:null}
-        required={props?.required===false?false:true}
+        defaultValue={props.defaultValue ? props.defaultValue : null}
+        required={props?.required === false ? false : true}
         readOnly={props?.readOnly}
+        onChange={props?.onChange}
+        list={props?.list}
       />
     </>
   );
-})
+});
 export default Input;
 
 export function Label(props) {
   return (
     <>
-      <label className={props?.className+' fs-5'} htmlFor={props.id}>
+      <label className={props?.className + " fs-5"} htmlFor={props.id}>
         {props.name}
       </label>
     </>
@@ -31,9 +33,18 @@ export function Label(props) {
 
 export function Selection(props) {
   return (
-    <select className={props?.className+' selectdropdown py-2 w-100 rounded'} aria-label="Default select example" defaultValue={props.defaultValue?props.defaultValue:props.menu[0]}>
+    <select
+      ref={props.selectRef}
+      onChange={props?.onChange}
+      name={props?.name}
+      className={props?.className + " selectdropdown py-2 w-100 rounded"}
+      aria-label="Default select example"
+      defaultValue={props.defaultValue ? props.defaultValue : props.menu[0]}
+    >
       {props.menu.map((item) => (
-        <option key={item} value={item}>{item}</option>
+        <option key={item} value={item}>
+          {item}
+        </option>
       ))}
     </select>
   );
@@ -41,7 +52,11 @@ export function Selection(props) {
 
 export function Button(props) {
   return (
-    <button style={{ background: "#F84242",color:"white" }} onClick={props?.onClick} className="btn">
+    <button
+      style={{ background: "#F84242", color: "white" }}
+      onClick={props?.onClick}
+      className="btn"
+    >
       {props.name}
     </button>
   );

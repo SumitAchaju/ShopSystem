@@ -1,4 +1,4 @@
-import { RouterProvider } from "react-router-dom"
+import { RouterProvider } from "react-router-dom";
 import {
   Route,
   createBrowserRouter,
@@ -12,27 +12,39 @@ import Import from "./pages/Import";
 import Loan from "./pages/Loan";
 import Bill from "./pages/Bill";
 import ProductDetail from "./pages/ProductDetail";
+import { AuthProvider } from "./context/Auth";
+import Login from "./pages/Login";
+import PrivateRoutes from "./pages/PrivateRouter";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<Navbar />}>
-        <Route path="/" element={<ProductSearch />} >
-          <Route index element={<Home/>} />
-          <Route path="/product/:id" element={<ProductDetail/>} />
+      <>
+        <Route path="/" element={<PrivateRoutes />}>
+          <Route path="/" element={<Navbar />}>
+            <Route path="/" element={<ProductSearch />}>
+              <Route index element={<Home />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+            </Route>
+            <Route path="sales" element={<Sales />} />
+            <Route path="import" element={<Import />} />
+            <Route path="/bill" element={<Bill />} />
+            <Route path="/loan" element={<Loan />} />
+          </Route>
         </Route>
-        <Route path="sales" element={<Sales />} />
-        <Route path="import" element={<Import />} />
-        <Route path="/bill" element={<Bill />} />
-        <Route path="/loan" element={<Loan />} />
-      </Route>
+        <Route path="/login" element={<Login />} />
+      </>
     )
   );
-  return(
+  return (
     <>
-    <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+        <Toaster />
+      </AuthProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

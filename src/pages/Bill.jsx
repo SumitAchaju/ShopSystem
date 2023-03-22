@@ -1,11 +1,12 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useContext, useMemo, useRef, useState } from "react";
 import BillSettings from "../components/bill/BillSettings";
 import { filterBillDate } from "../utils/fiterBill";
-import { allBill } from "../utils/dummyData";
 import BillList from "../components/bill/BillList";
 import BillFilter from "../components/bill/BillFilter";
+import DataContext from "../context/Data";
 
 export default function Bill() {
+  const {allBill} = useContext(DataContext)
   const [tab, setTab] = useState("import");
   const [filterBtnStatus, setFilterBtnStatus] = useState("week");
   const initialLimit = 10;

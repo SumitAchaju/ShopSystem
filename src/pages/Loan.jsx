@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import AuthContext from "../context/Auth";
 
 export default function Loan() {
+  const {logoutUser} = useContext(AuthContext)
   return (
     <>
       <div className="container">
@@ -14,6 +16,7 @@ export default function Loan() {
           >
             This Page Is Under Development
           </h2>
+          <button className="btn btn-danger" onClick={logoutUser}>Logout</button>
         </div>
       </div>
     </>

@@ -139,3 +139,26 @@ export function EntryHeading({ title }) {
     </>
   );
 }
+
+export function EntrySelection(props){
+  return(
+    <Row>
+    <div className="col-3">
+      <Label {...props.label} />
+    </div>
+    <div className="col-5">
+      <Selection {...props.selection} />
+    </div>
+  </Row>
+  )
+}
+
+export function EntryProductSuggestions(props){
+  return(
+  <datalist id={props.id}>
+    {props.product && props.product.map(item=>
+      <option key={item.id} value={item.product_name}>{item.product_name}</option>
+      )}
+</datalist>
+  )
+}

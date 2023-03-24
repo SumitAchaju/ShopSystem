@@ -41,26 +41,26 @@ export default function HomeProduct({
                 {filterData.slice(0, limit).map((item) => (
                   <div key={item.id}>
                     <Link to={`/product/${item.id}`}>
-                    <div className="row">
-                      <div className="col-10">
-                        <h4>{item.product_name}</h4>
+                      <div className="row">
+                        <div className="col-10">
+                          <h4>{item.product_name}</h4>
+                        </div>
+                        <div className="col-2">
+                          <span>{item.sales_unit}</span>
+                        </div>
                       </div>
-                      <div className="col-2">
-                        <span>{item.sale_unit}</span>
+                      <div className="row">
+                        <div className="col-6">
+                          <p>
+                            Price: <span>{item.price}</span>
+                          </p>
+                        </div>
+                        <div className="col-6">
+                          <p>
+                            inStock: <span>{item.in_stock}</span>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-6">
-                        <p>
-                          Price: <span>{item.price}</span>
-                        </p>
-                      </div>
-                      <div className="col-6">
-                        <p>
-                          inStock: <span>{item.in_stock}</span>
-                        </p>
-                      </div>
-                    </div>
                     </Link>
                   </div>
                 ))}

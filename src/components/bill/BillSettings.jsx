@@ -53,7 +53,7 @@ export default function BillSettings({
     const newBill = [];
     billStatus.forEach((item) => {
       const isInBill = item.bill.filter(
-        (innerItem) => innerItem.name.toLowerCase().includes(search) === true
+        (innerItem) => innerItem.product.product_name.toLowerCase().includes(search) === true
       );
       if (isInBill.length != 0) {
         newBill.push({

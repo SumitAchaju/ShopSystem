@@ -17,13 +17,13 @@ export function AuthProvider({ children }) {
       : null
   );
   
-  const baseUrl = "http://192.168.0.108:8000"
+  const baseURL = "http://192.168.0.109:8000"
 
   const loginUser = async (e) => {
     e.preventDefault();
     console.log("work")
     try {
-      let response = await axios.post(`${baseUrl}/api/token/`, {
+      let response = await axios.post(`${baseURL}/api/token/`, {
         username: `${e.target.username.value}`,
         password: `${e.target.password.value}`,
       });
@@ -55,7 +55,7 @@ export function AuthProvider({ children }) {
   let contextData = {
     loginStatus: loginStatus,
     authToken: authToken,
-    baseUrl:baseUrl,
+    baseURL:baseURL,
     setAuthToken: setAuthToken,
     loginUser: loginUser,
     logoutUser: logoutUser,

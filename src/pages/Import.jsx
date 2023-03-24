@@ -10,7 +10,6 @@ import {
   EntryProductSuggestions,
   EntrySelection,
 } from "../components/Entry";
-import AuthContext from "../context/Auth";
 import DataContext from "../context/Data";
 import { savedBillToast } from "../utils/toast";
 import PopUpModal, { ImportBillContent } from "../components/modal/PopUpModal";
@@ -26,11 +25,11 @@ const incrementTypeRef = React.createRef(null);
 const productPriceRef = React.createRef(null);
 
 export default function Import() {
-  const { baseUrl } = useContext(AuthContext);
   const { product } = useContext(DataContext);
   const api = useAxios();
-  const [popUpData,setPopUpData] = useState({});
-  const[sumbit,setSumbit] =useState(false)
+  const [popUpData, setPopUpData] = useState({});
+  const [sumbit, setSumbit] = useState(false);
+
   function handleImportSumbit(e) {
     e.preventDefault();
     const data = {
@@ -46,15 +45,17 @@ export default function Import() {
       date: e.target.productDate.value,
       incrementType: e.target.productIncrementType.value,
       discountType: e.target.productDiscountType.value,
+      salesPrice: Number(e.target.productPrice.value),
     };
-    if(sumbit===false){
-      setPopUpData(data)
-      setSumbit(true)
-      return
+    if (sumbit === false) {
+      setPopUpData(data);
+      new bootstrap.Modal("#importbillmodal").show();
+      setSumbit(true);
+      return;
     }
-    const myPromise = api.post(`${baseUrl}/import_bill/`, data);
+    const myPromise = api.post(`/import_bill/`, data);
     savedBillToast(myPromise);
-    setSumbit(false)
+    setSumbit(false);
   }
   return (
     <>
@@ -88,12 +89,19 @@ export default function Import() {
 
               <EntryDate />
 
-              <PopUpModal id="importbillmodal" data = {popUpData} Content={ImportBillContent} setSumbit={setSumbit}/>
+              <PopUpModal
+                title={"Confirm Bill"}
+                id="importbillmodal"
+                data={popUpData}
+                Content={ImportBillContent}
+                setSumbit={setSumbit}
+              />
+
               <div className="d-flex justify-content-center mt-4 mb-3">
                 <button
                   type="sumbit"
-                  data-bs-toggle="modal"
-                  data-bs-target="#importbillmodal"
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#importbillmodal"
                   className="btn btn-success d-block fs-4 py-2 px-5"
                 >
                   Save
@@ -128,14 +136,14 @@ function onChangeHandler() {
     buyValueWithoutDiscount = buyValue + discountValue;
   }
   let rate = buyValueWithoutDiscount / quantityValue;
-  rateRef.current.value = rate;
-  ourRateRef.current.value = buyValue / quantityValue;
+  rateRef.current.value = rate.toFixed(2);
+  ourRateRef.current.value = (buyValue / quantityValue).toFixed(2);
   let ourRate = Number(ourRateRef.current.value);
   let increment = Number(incrementInputRef.current.value);
   let incrementType = incrementTypeRef.current.value;
   let incrementAmount =
     incrementType === "%" ? (increment / 100) * ourRate : increment;
-  productPriceRef.current.value = incrementAmount + ourRate;
+  productPriceRef.current.value = (incrementAmount + ourRate).toFixed(2);
 }
 
 const productNameInput = {

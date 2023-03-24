@@ -5,10 +5,10 @@ import { useContext } from "react";
 import AuthContext from "../context/Auth";
 
 function useAxios() {
-  const { authToken, setAuthToken , baseUrl } = useContext(AuthContext);
+  const { authToken, setAuthToken,baseURL  } = useContext(AuthContext);
 
   const axiosInstance = axios.create({
-    baseUrl,
+    baseURL,
     headers: { Authorization: `Bearer ${authToken?.access}` },
   });
 
@@ -18,7 +18,7 @@ function useAxios() {
 
     if (!isExpired) return req;
 
-    const response = await axios.post(`${baseUrl}/api/token/refresh/`, {
+    const response = await axios.post(`${baseURL}/api/token/refresh/`, {
       refresh: authToken.refresh,
     });
 

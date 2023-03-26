@@ -26,6 +26,9 @@ export default function ProductDetail() {
   );
   function confirmUpdate() {
     setEditStatus(true);
+    if(editStatus===false){
+      return
+    }
     setPopUpData({
       price: salesRef.current.value,
       increment: incrementRef.current.value,
@@ -57,10 +60,10 @@ export default function ProductDetail() {
     const ourRate = ProductData.our_rate;
     if (showI === "%") {
       const increment = (sales / ourRate - 1) * 100;
-      incrementRef.current.value = increment.toFixed(0);
+      incrementRef.current.value = increment.toFixed(2);
     } else {
       const increment = sales - ourRate;
-      incrementRef.current.value = increment.toFixed(0);
+      incrementRef.current.value = increment.toFixed(2);
     }
   }
   function handleInputIncrementChange() {
@@ -214,6 +217,8 @@ function SpanOrInput({
           name={name}
           defaultValue={parseData}
           onChange={onChangeFunction}
+          min="0"
+          step='0.01'
         />
       ) : (
         <span>
@@ -250,6 +255,8 @@ function PercentageOrRate({
             ref={forwardRef}
             onChange={onChange}
             style={{width:"70%"}}
+            min="0"
+            step={"0.01"}
           />
           <p className="rounded-circle mb-0">{show}</p>
         </div>

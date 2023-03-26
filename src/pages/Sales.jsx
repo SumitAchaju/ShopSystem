@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
   EntryDate,
   EntryHeading,
@@ -8,8 +8,11 @@ import {
 import useAxios from "../utils/useAxios";
 import { savedBillToast } from "../utils/toast";
 import PopUpModal, { SalesBillContent } from "../components/modal/PopUpModal";
+import DataContext from "../context/Data";
+import autoComplete from "../utils/searchSuggetions";
 
 export default function Sales() {
+  const {HomeProductData} = useContext(DataContext)
   const api = useAxios();
   const [popUpData, setPopUpData] = useState({});
   const [sumbit, setSumbit] = useState(false);
@@ -33,7 +36,16 @@ export default function Sales() {
     savedBillToast(myPromise);
     setSumbit(false);
   }
-
+  const product = useMemo(()=>{
+    let productlist=[];
+    HomeProductData.forEach(item=>{
+      productlist.push(item.product_name)
+    })
+    return productlist
+  },[HomeProductData])
+  useEffect(()=>{
+    autoComplete(document.getElementById("sales-product-name"), product)
+  },[product])
   return (
     <>
       <EntryHeading title="Sales Entry" />
@@ -41,7 +53,7 @@ export default function Sales() {
         <div className="container px-4">
           <h4>Sales Entry</h4>
 
-          <form onSubmit={handleSalesSumbit}>
+          <form autoComplete="off" onSubmit={handleSalesSumbit}>
             <EntryLabelName {...productNameInput} />
 
             <EntryLabelInputInfo {...productSalesRate} />
@@ -76,7 +88,7 @@ const productNameInput = {
     id: "sales-product-name",
   },
   input: {
-    type: "text",
+    type: "search",
     placeHolder: "Product Name...",
     name: "productName",
     id: "sales-product-name",

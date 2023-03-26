@@ -1,12 +1,36 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 export default function ImportBillBox(props) {
   const [discount, setDiscount] = useState(
     `Rs ${props.discount_rate.toFixed(2)}`
   );
+  const [pressTimer, setPressTimer] = useState(null);
+  const buttonRef = useRef(null);
+
+  const handleMouseDown = () => {
+    // Set a timer for 500ms
+    const timer = setTimeout(() => {
+      // Long press action
+      props.setData(props);
+      new bootstrap.Modal("#importbillupdatemodal").show();
+    }, 1000);
+    setPressTimer(timer);
+  };
+
+  const handleMouseUp = () => {
+    // Clear the timer
+    clearTimeout(pressTimer);
+  };
   return (
     <>
-      <div className="import-bill-box my-3">
+      <div
+        ref={buttonRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onTouchStart={handleMouseDown}
+        onTouchEnd={handleMouseUp}
+        className="import-bill-box my-3"
+      >
         <div className="row px-3 pt-3">
           <div className="col-8">
             <h4 className="name">{props.product.product_name}</h4>
@@ -52,9 +76,33 @@ export default function ImportBillBox(props) {
   );
 }
 export function SalesBillBox(props) {
+  const [pressTimer, setPressTimer] = useState(null);
+  const buttonRef = useRef(null);
+
+  const handleMouseDown = () => {
+    // Set a timer for 500ms
+    const timer = setTimeout(() => {
+      // Long press action
+      props.setData(props);
+      new bootstrap.Modal("#salesbillupdatemodal").show();
+    }, 1000);
+    setPressTimer(timer);
+  };
+
+  const handleMouseUp = () => {
+    // Clear the timer
+    clearTimeout(pressTimer);
+  };
   return (
     <>
-      <div className="sales-bill-box my-3">
+      <div
+        ref={buttonRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onTouchStart={handleMouseDown}
+        onTouchEnd={handleMouseUp}
+        className="sales-bill-box my-3"
+      >
         <div className="row px-3 pt-3">
           <div className="col-8">
             <h4 className="name">{props.product.product_name}</h4>

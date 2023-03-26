@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
       : null
   );
   
-  const baseURL = "http://192.168.0.109:8000"
+  const baseURL = "http://192.168.0.112:8000"
 
   const loginUser = async (e) => {
     e.preventDefault();

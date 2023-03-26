@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PopUpModal({ id, Content, data, setSumbit, title }) {
+export default function PopUpModal({ id, Content, data, setSumbit, title,setUpdate }) {
   return (
     <div>
       {/* Modal */}
@@ -27,6 +27,7 @@ export default function PopUpModal({ id, Content, data, setSumbit, title }) {
                 data-bs-dismiss="modal"
                 type="sumbit"
                 className="btn btn-success fs-5 px-4 active-btn"
+                onClick={setUpdate?setUpdate:null}
               >
                 Save
               </button>

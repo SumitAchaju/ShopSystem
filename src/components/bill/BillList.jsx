@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
+import PopUpModal from "../modal/PopUpModal";
 import ImportBillBox, { SalesBillBox } from "./BillBox";
+import ImportBillUpdateContent from "./ImportBillUpdateContent";
+import SalesBillUpdateContent from "./SalesBillUpdateContent";
 
 export default function BillList({
   tab,
@@ -10,8 +13,10 @@ export default function BillList({
   initialLimit,
   showSpinner,
   setShowSpinner,
-  profit
+  profit,
 }) {
+  const [popUpData, setPopUpData] = useState({});
+
   function fullRenderFilterData() {
     if (limit >= filterData.length) {
       return true;
@@ -26,6 +31,10 @@ export default function BillList({
   async function stopSpinner() {
     await sleep(1000);
     setShowSpinner(false);
+  }
+  function sumbitForm() {
+    const element = document.getElementById(`update${tab}billform`);
+    element.click();
   }
   return (
     <>
@@ -61,10 +70,14 @@ export default function BillList({
                   </div>
                   {tab === "import"
                     ? item.bill.map((innerItem) => (
-                        <ImportBillBox {...innerItem} key={innerItem.id} />
+                        <ImportBillBox
+                          {...innerItem}
+                          key={innerItem.id}
+                          setData={setPopUpData}
+                        />
                       ))
                     : item.bill.map((innerItem) => (
-                        <SalesBillBox {...innerItem} key={innerItem.id} />
+                        <SalesBillBox {...innerItem} key={innerItem.id} setData={setPopUpData} />
                       ))}
                 </div>
               ))}
@@ -85,6 +98,14 @@ export default function BillList({
           )}
         </div>
       </section>
+
+      <PopUpModal
+        title={"Update Bill"}
+        id={`${tab}billupdatemodal`}
+        data={popUpData}
+        Content={tab==="import"?ImportBillUpdateContent:SalesBillUpdateContent}
+        setUpdate={sumbitForm}
+      />
     </>
   );
 }

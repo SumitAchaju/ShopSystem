@@ -1,61 +1,42 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import useAxios from "../utils/useAxios";
+import React, {  useContext, useEffect, useMemo } from "react";
+import useAxios from "../../utils/useAxios";
 import {
   EntryDate,
-  EntryHeading,
   EntryInputBtn,
   EntryInputSelectBtn,
   EntryLabelName,
   EntryPrice,
-  EntrySelection,
-} from "../components/Entry";
-import DataContext from "../context/Data";
-import { savedBillToast } from "../utils/toast";
-import PopUpModal, { ImportBillContent } from "../components/modal/PopUpModal";
-import autoComplete from "../utils/searchSuggetions";
+} from "../../components/Entry";
+import DataContext from "../../context/Data";
+import { savedBillToast } from "../../utils/toast";
+import autoComplete from "../../utils/searchSuggetions";
 
 const discountInputRef = React.createRef(null);
-const incrementInputRef = React.createRef(null);
 const buyRef = React.createRef(null);
 const quantityRef = React.createRef(null);
 const ourRateRef = React.createRef(null);
 const rateRef = React.createRef(null);
 const discountTypeRef = React.createRef(null);
-const incrementTypeRef = React.createRef(null);
-const productPriceRef = React.createRef(null);
 
-export default function Import() {
+export default function ImportBillUpdateContent({data}) {
   const { HomeProductData } = useContext(DataContext);
   const api = useAxios();
-  const [popUpData, setPopUpData] = useState({});
-  const [sumbit, setSumbit] = useState(false);
-
+  const urlId = data.id
   function handleImportSumbit(e) {
     e.preventDefault();
     const data = {
       productName: e.target.productName.value,
       buy: Number(e.target.productBuy.value),
-      discount: Number(e.target.productDiscount.value),
       quantity: Number(e.target.productQuantity.value),
+      discount:Number(e.target.productDiscount.value),
       kg: Number(e.target.productKg.value),
       rate: Number(e.target.productRate.value),
       ourRate: Number(e.target.productOurRate.value),
-      increment: Number(e.target.productIncrement.value),
-      salesUnit: e.target.productUnit.value,
       date: e.target.productDate.value,
-      incrementType: e.target.productIncrementType.value,
       discountType: e.target.productDiscountType.value,
-      salesPrice: Number(e.target.productPrice.value),
     };
-    if (sumbit === false) {
-      setPopUpData(data);
-      new bootstrap.Modal("#importbillmodal").show();
-      setSumbit(true);
-      return;
-    }
-    const myPromise = api.post(`/import_bill/`, data);
+    const myPromise = api.patch(`/import_bill/${urlId}/`, data);
     savedBillToast(myPromise);
-    setSumbit(false);
   }
   const product = useMemo(()=>{
     let productlist=[];
@@ -67,51 +48,38 @@ export default function Import() {
   useEffect(()=>{
     autoComplete(document.getElementById("import-product-name"), product)
   },[product])
+  useEffect(()=>{
+    document.getElementById("import-product-name").value = data.product?.product_name
+    document.getElementById("import-product-buy").value = data.total_price
+    document.getElementById("import-product-discount").value = data.discount_rate?.toFixed(2)
+    document.getElementById("import-product-quantity").value = data.amount_in_pcs
+    document.getElementById("import-product-kg").value = data.amount_in_kg
+    document.getElementById("import-product-rate").value = data.rate
+    document.getElementById("import-product-ourrate").value = data.our_rate
+    document.getElementById("import-product-date").value = data.import_date
+    discountTypeRef.current.value= "Rs"
+  },[data])
   return (
     <>
-      <EntryHeading title={"Import Entry"} />
       <section className="import mt-2">
-        <div className="container px-4">
+        <div className="container px-1">
           <div className="import-input-box">
             <form autoComplete="off" onSubmit={handleImportSumbit}>
-              <EntryLabelName {...productNameInput} />
+              <EntryLabelName {...productNameInput} defaultValue={data.product?.product_name} />
 
-              <EntryPrice {...productBuyPrice} />
+              <EntryPrice {...productBuyPrice} defaultValue={data.total_price} />
 
-              <EntryInputSelectBtn {...productDiscount} />
+              <EntryInputSelectBtn {...productDiscount} defaultValue={data.discount_rate}/>
 
-              <EntryInputBtn {...productQuantity} />
+              <EntryInputBtn {...productQuantity} defaultValue1={data.amount_in_pcs} defaultValue2={data.amount_in_kg}/>
 
-              <EntryPrice {...productRate} />
+              <EntryPrice {...productRate} defaultValue={data.rate}/>
 
-              <EntryPrice {...productOurRate} />
+              <EntryPrice {...productOurRate} defaultValue={data.our_rate}/>
 
-              <EntryPrice {...productIncrementPrice} />
+              <EntryDate defaultValue={data.import_date} default={true} />
 
-              <EntryInputSelectBtn {...productIncrement} />
-
-              <EntrySelection {...productSalesUnit} />
-
-              <EntryDate />
-
-              <PopUpModal
-                title={"Confirm Bill"}
-                id="importbillmodal"
-                data={popUpData}
-                Content={ImportBillContent}
-                setSumbit={setSumbit}
-              />
-
-              <div className="d-flex justify-content-center mt-4 mb-3">
-                <button
-                  type="sumbit"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#importbillmodal"
-                  className="btn btn-success d-block fs-4 py-2 px-5"
-                >
-                  Save
-                </button>
-              </div>
+              <button id="updateimportbillform" type="sumbit" className="d-none"></button>
             </form>
           </div>
         </div>
@@ -143,12 +111,6 @@ function onChangeHandler() {
   let rate = buyValueWithoutDiscount / quantityValue;
   rateRef.current.value = rate.toFixed(2);
   ourRateRef.current.value = (buyValue / quantityValue).toFixed(2);
-  let ourRate = Number(ourRateRef.current.value);
-  let increment = Number(incrementInputRef.current.value);
-  let incrementType = incrementTypeRef.current.value;
-  let incrementAmount =
-    incrementType === "%" ? (increment / 100) * ourRate : increment;
-  productPriceRef.current.value = (incrementAmount + ourRate).toFixed(2);
 }
 
 const productNameInput = {
@@ -161,6 +123,7 @@ const productNameInput = {
     placeHolder: "Product Name...",
     name: "productName",
     id: "import-product-name",
+    readOnly:true
   },
   selection: {
     menu: ["New", "Old"],
@@ -260,58 +223,5 @@ const productOurRate = {
     id: "import-product-ourrate",
     readOnly: true,
     ref: ourRateRef,
-  },
-};
-const productIncrementPrice = {
-  label: {
-    name: "SalePrice:",
-    id: "import-product-price",
-  },
-  input: {
-    type: "number",
-    placeHolder: "",
-    name: "productPrice",
-    id: "import-product-price",
-    readOnly: true,
-    ref: productPriceRef,
-  },
-};
-const productIncrement = {
-  label: {
-    name: "Increment:",
-    id: "import-product-increment",
-  },
-  input: {
-    ref: incrementInputRef,
-    type: "number",
-    placeHolder: "",
-    name: "productIncrement",
-    id: "import-product-increment",
-    onChange: onChangeHandler,
-  },
-  selection: {
-    menu: ["Rs", "%"],
-    name: "productIncrementType",
-    selectRef: incrementTypeRef,
-    onChange: onChangeHandler,
-  },
-  info: {
-    title: "0%",
-    className: "rounded-circle",
-    onClick: () => {
-      incrementInputRef.current.value = 0;
-      onChangeHandler();
-    },
-  },
-};
-const productSalesUnit = {
-  label: {
-    name: "SaleUnit:",
-    id: "import-product-unit",
-  },
-  selection: {
-    menu: ["Pcs", "Dozn", "Kg", "6Pcs"],
-    name: "productUnit",
-    className: "fs-5 text-start ps-2",
   },
 };

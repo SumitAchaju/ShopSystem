@@ -15,6 +15,8 @@ const Input = React.forwardRef(function (props, ref) {
         readOnly={props?.readOnly}
         onChange={props?.onChange}
         list={props?.list}
+        min={props.type==="number"?"0":null}
+        step={"0.01"}
       />
     </>
   );

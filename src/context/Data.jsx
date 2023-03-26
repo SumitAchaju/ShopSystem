@@ -7,7 +7,7 @@ export default DataContext;
 
 export function DataProvider({ children }) {
   const api = useAxios();
-  const {loginStatus} = useContext(AuthContext)
+  const {loginStatus,authToken} = useContext(AuthContext)
   const [HomeProductData, setHomeProductData] = useState([]);
   const [importBill, setImportBill] = useState();
   const [salesBill, setSalesBill] = useState();
@@ -17,14 +17,11 @@ export function DataProvider({ children }) {
     async function getData() {
       const productRes = await api.get(`/product/`);
       setHomeProductData(productRes.data);
-
       const importBillRes = await api.get(`/import_bill/`);
       const parsedDataImport = parseDataImport(importBillRes.data);
-      console.log(parsedDataImport);
       setImportBill(parsedDataImport);
       const salesBillRes = await api.get(`/sales_bill/`);
       const parsedDataSales = parseDataSales(salesBillRes.data);
-      console.log(parsedDataSales);
       setSalesBill(parsedDataSales);
       setGetAllData(true);
     }
@@ -34,7 +31,7 @@ export function DataProvider({ children }) {
     else{
       setGetAllData(true)
     }
-  }, [loginStatus]);
+  }, [loginStatus,authToken]);
   const value = {
     HomeProductData,
     importBill,

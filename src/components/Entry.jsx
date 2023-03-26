@@ -16,8 +16,8 @@ export function EntryLabelName(props) {
       <div className="col-3">
         <Label {...props.label} />
       </div>
-      <div className="col-9">
-        <Input {...props.input} />
+      <div className="col-9 autocomplete">
+        <Input {...props.input} defaultValue={props?.defaultValue} />
       </div>
     </Row>
   );
@@ -30,7 +30,7 @@ export function EntryPrice(props) {
         <Label {...props.label} />
       </div>
       <div className="col-5">
-        <Input {...props.input} />
+        <Input {...props.input} defaultValue={props?.defaultValue} />
       </div>
     </Row>
   );
@@ -42,7 +42,7 @@ export function EntryInputSelectBtn(props) {
         <Label {...props.label} />
       </div>
       <div className="col-5">
-        <Input {...props.input} />
+        <Input {...props.input} defaultValue={props?.defaultValue} />
       </div>
       <div className="col-2">
         <Selection {...props.selection} />
@@ -60,10 +60,10 @@ export function EntryInputBtn(props) {
         <Label {...props.label} />
       </div>
       <div className="col-5">
-        <Input {...props.input} />
+        <Input {...props.input} defaultValue={props?.defaultValue1} />
       </div>
       <div className="col-2">
-        <Input {...props.input2} />
+        <Input {...props.input2} defaultValue={props?.defaultValue2} />
       </div>
       <div className="col-2">
         <Info {...props.info} />
@@ -78,7 +78,7 @@ export function EntryLabelInputInfo(props) {
         <Label {...props.label} />
       </div>
       <div className="col-7">
-        <Input {...props.input} />
+        <Input {...props.input} defaultValue={props?.defaultValue} />
       </div>
       <div className="col-2">
         <Info {...props.info} />
@@ -86,7 +86,7 @@ export function EntryLabelInputInfo(props) {
     </Row>
   );
 }
-export function EntryDate() {
+export function EntryDate(props) {
   const dateInputRef = useRef(null);
 
   const currentDate = useMemo(getDate, []);
@@ -107,7 +107,7 @@ export function EntryDate() {
           name="productDate"
           id="import-product-date"
           ref={dateInputRef}
-          defaultValue={currentDate}
+          defaultValue={props.default?props.defaultValue:currentDate}
         />
       </div>
       <div className="col-3">
@@ -122,7 +122,7 @@ export function EntryHeading({ title }) {
     <>
       <section
         className="entry-heading bg-light mb-4"
-        style={{ position: "sticky", left: "0", top: "0" }}
+        style={{ position: "sticky", left: "0", top: "0",zIndex:"999" }}
       >
         <div
           style={{
@@ -156,8 +156,8 @@ export function EntrySelection(props){
 export function EntryProductSuggestions(props){
   return(
   <datalist id={props.id}>
-    {props.product && props.product.map(item=>
-      <option key={item.id} value={item.product_name}>{item.product_name}</option>
+    {props.product.map(item=>
+      <option key={item.id} value={item.product_name}/>
       )}
 </datalist>
   )

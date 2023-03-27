@@ -14,7 +14,7 @@ const salesUnitRef = React.createRef();
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const { HomeProductData } = useContext(DataContext);
+  const { HomeProductData,setHomeProductData } = useContext(DataContext);
   const [editStatus, setEditStatus] = useState(false);
   const [showD, setDShow] = useState("%");
   const [showI, setIShow] = useState("%");
@@ -52,7 +52,16 @@ export default function ProductDetail() {
     };
     const myPromise = api
       .patch(`/product/${ProductData.id}/`, data)
-      .then((res) => console.log(res.data));
+      .then((res) => {
+        const responseData = res.data
+        HomeProductData.forEach((item,i)=>{
+          if(item.id === responseData.id){
+            HomeProductData[i] = responseData
+            setHomeProductData([...HomeProductData])
+            return
+          }
+        })
+      });
     savedBillToast(myPromise);
   }
   function handleInputSalesChange() {

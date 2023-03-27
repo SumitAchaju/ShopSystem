@@ -67,7 +67,7 @@ export function Search(props) {
           />
         </div>
         <div className="col-2">
-          <button className="border-0 d-block rounded-circle" type="sumbit">
+          <button id="top-search" className="border-0 d-block rounded-circle" type="sumbit">
             <i className="bi bi-search"></i>
           </button>
         </div>

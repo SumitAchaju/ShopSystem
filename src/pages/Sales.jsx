@@ -8,11 +8,11 @@ import {
 import useAxios from "../utils/useAxios";
 import { savedBillToast } from "../utils/toast";
 import PopUpModal, { SalesBillContent } from "../components/modal/PopUpModal";
-import DataContext from "../context/Data";
+import DataContext, { parseDataSales } from "../context/Data";
 import autoComplete from "../utils/searchSuggetions";
 
 export default function Sales() {
-  const {HomeProductData} = useContext(DataContext)
+  const {HomeProductData,salesBill,setSalesBill} = useContext(DataContext)
   const api = useAxios();
   const [popUpData, setPopUpData] = useState({});
   const [sumbit, setSumbit] = useState(false);
@@ -32,7 +32,22 @@ export default function Sales() {
     }
     const myPromise = api
       .post("/sales_bill/", data)
-      .then((res) => console.log(res.data));
+      .then((res) =>{
+        const responseData = res.data;
+        const parsedBill = parseDataSales([responseData])[0];
+        let isDateInSales = false;
+        salesBill.forEach((item) => {
+          if (item.date === parsedBill.date) {
+            item.bill.unshift(parsedBill.bill[0]);
+            isDateInSales = true;
+            setSalesBill(salesBill);
+            return
+          }
+        });
+        if (!isDateInSales) {
+          setSalesBill((prev) => [parsedBill, ...prev]);
+        }
+      } );
     savedBillToast(myPromise);
     setSumbit(false);
   }

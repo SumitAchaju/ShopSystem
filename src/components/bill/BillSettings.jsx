@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Search } from "../ProductSearch";
 import { filterBillDate } from "../../utils/fiterBill";
 
@@ -93,6 +93,33 @@ export default function BillSettings({
     resetLimit()
     setShowSpinner(true)
   }
+  function searchUseEffectFunction(search){
+    const newBill = [];
+    billStatus.forEach((item) => {
+      const isInBill = item.bill.filter(
+        (innerItem) => innerItem.product.product_name.toLowerCase().includes(search) === true
+      );
+      if (isInBill.length != 0) {
+        newBill.push({
+          date: item.date,
+          bill: isInBill,
+        });
+      }
+    });
+    setBillData(newBill);
+  }
+  useEffect(()=>{
+    if (filterBtnStatus == "filter"){
+      return
+    }
+    else if (filterBtnStatus === 'search'){
+      searchUseEffectFunction(inputRef.current.value.toLowerCase())
+    }
+    else{
+
+      setBillData(filterBillDate(billStatus, `${filterBtnStatus}`))
+    }
+  },[bill])
   return (
     <>
       <section className="billsetting pt-4 pb-3">

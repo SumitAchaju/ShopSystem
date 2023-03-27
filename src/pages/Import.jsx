@@ -9,7 +9,7 @@ import {
   EntryPrice,
   EntrySelection,
 } from "../components/Entry";
-import DataContext from "../context/Data";
+import DataContext, { parseDataImport } from "../context/Data";
 import { savedBillToast } from "../utils/toast";
 import PopUpModal, { ImportBillContent } from "../components/modal/PopUpModal";
 import autoComplete from "../utils/searchSuggetions";
@@ -25,11 +25,11 @@ const incrementTypeRef = React.createRef(null);
 const productPriceRef = React.createRef(null);
 
 export default function Import() {
-  const { HomeProductData } = useContext(DataContext);
+  const { HomeProductData, importBill, setImportBill, setHomeProductData } =
+    useContext(DataContext);
   const api = useAxios();
   const [popUpData, setPopUpData] = useState({});
   const [sumbit, setSumbit] = useState(false);
-
   function handleImportSumbit(e) {
     e.preventDefault();
     const data = {
@@ -53,20 +53,40 @@ export default function Import() {
       setSumbit(true);
       return;
     }
-    const myPromise = api.post(`/import_bill/`, data);
+    const myPromise = api.post(`/import_bill/`, data).then((res) => {
+      const responseData = res.data;
+      if (
+        !HomeProductData.find((item) => item.id === responseData.product.id)
+      ) {
+        setHomeProductData((prev) => [responseData.product, ...prev]);
+      }
+      const parsedBill = parseDataImport([responseData])[0];
+      let isDateInImport = false;
+      importBill.forEach((item) => {
+        if (item.date === parsedBill.date) {
+          item.bill.unshift(parsedBill.bill[0]);
+          isDateInImport = true;
+          setImportBill(importBill);
+          return
+        }
+      });
+      if (!isDateInImport) {
+        setImportBill((prev) => [parsedBill, ...prev]);
+      }
+    });
     savedBillToast(myPromise);
     setSumbit(false);
   }
-  const product = useMemo(()=>{
-    let productlist=[];
-    HomeProductData.forEach(item=>{
-      productlist.push(item.product_name)
-    })
-    return productlist
-  },[HomeProductData])
-  useEffect(()=>{
-    autoComplete(document.getElementById("import-product-name"), product)
-  },[product])
+  const product = useMemo(() => {
+    let productlist = [];
+    HomeProductData.forEach((item) => {
+      productlist.push(item.product_name);
+    });
+    return productlist;
+  }, [HomeProductData]);
+  useEffect(() => {
+    autoComplete(document.getElementById("import-product-name"), product);
+  }, [product]);
   return (
     <>
       <EntryHeading title={"Import Entry"} />

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import BillSettings from "../components/bill/BillSettings";
 import { filterBillDate } from "../utils/fiterBill";
 import BillList from "../components/bill/BillList";
@@ -70,6 +70,7 @@ export default function Bill() {
         setFilterBtnStatus={setFilterBtnStatus}
         inputRef={inputRef}
         setShowSpinner={setShowSpinner}
+        filterBtnStatus={filterBtnStatus}
       />
     </>
   );

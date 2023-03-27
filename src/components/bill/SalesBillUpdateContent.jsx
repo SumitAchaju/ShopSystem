@@ -6,11 +6,11 @@ import {
 } from "../../components/Entry";
 import useAxios from "../../utils/useAxios";
 import { savedBillToast } from "../../utils/toast";
-import DataContext from "../../context/Data";
+import DataContext, { parseDataSales } from "../../context/Data";
 import autoComplete from "../../utils/searchSuggetions";
 
 export default function SalesBillUpdateContent({ data }) {
-  const { HomeProductData } = useContext(DataContext);
+  const { HomeProductData,setSalesBill,salesBill } = useContext(DataContext);
   const api = useAxios();
   const urlId = data.id;
   function handleSalesSumbit(e) {
@@ -21,7 +21,49 @@ export default function SalesBillUpdateContent({ data }) {
       pcs: Number(e.target.productQuantity.value),
       date: e.target.productDate.value,
     };
-    const myPromise = api.patch(`/sales_bill/${urlId}/`, data);
+    const myPromise = api.patch(`/sales_bill/${urlId}/`, data).then(res=>{
+      const responseData = res.data
+      const parsedBill = parseDataSales([responseData])[0];
+      let brk = false;
+      let updated = false;
+      salesBill.forEach((item, i) => {
+        item.bill.forEach((innerItem, innerI) => {
+          if (innerItem.id === responseData.id) {
+            if (innerItem.import_date === responseData.import_date) {
+              salesBill[i].bill[innerI] = responseData;
+              setSalesBill([...salesBill]);
+              brk = true;
+              updated = true;
+              return;
+            } else {
+              salesBill[i].bill.splice(
+                salesBill[i].bill.indexOf(salesBill[i].bill[innerI]),
+                1
+              );
+              brk = true;
+              return;
+            }
+          }
+        });
+        if (brk) {
+          return;
+        }
+      });
+      if (!updated) {
+        let isDateInImport = false;
+        salesBill.forEach((item) => {
+          if (item.date === parsedBill.date) {
+            item.bill.unshift(parsedBill.bill[0]);
+            isDateInImport = true;
+            setSalesBill([...salesBill]);
+            return;
+          }
+        });
+        if (!isDateInImport) {
+          setSalesBill((prev) => [parsedBill, ...prev]);
+        }
+      }
+    });
     savedBillToast(myPromise);
   }
   const product = useMemo(() => {

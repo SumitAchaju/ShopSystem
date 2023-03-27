@@ -36,6 +36,9 @@ export function DataProvider({ children }) {
     HomeProductData,
     importBill,
     salesBill,
+    setImportBill,
+    setSalesBill,
+    setHomeProductData
   };
   return (
     <DataContext.Provider value={value}>
@@ -44,7 +47,7 @@ export function DataProvider({ children }) {
   );
 }
 
-function parseDataImport(data) {
+export function parseDataImport(data) {
   let obtainedData = data;
   let parsedData = [];
   while (obtainedData.length !== 0) {
@@ -63,7 +66,7 @@ function parseDataImport(data) {
   }
   return parsedData;
 }
-function parseDataSales(data) {
+export function parseDataSales(data) {
   let obtainedData = data;
   let parsedData = [];
   while (obtainedData.length !== 0) {

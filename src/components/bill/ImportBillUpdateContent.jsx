@@ -1,4 +1,4 @@
-import React, {  useContext, useEffect, useMemo } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import useAxios from "../../utils/useAxios";
 import {
   EntryDate,
@@ -7,7 +7,7 @@ import {
   EntryLabelName,
   EntryPrice,
 } from "../../components/Entry";
-import DataContext from "../../context/Data";
+import DataContext, { parseDataImport } from "../../context/Data";
 import { savedBillToast } from "../../utils/toast";
 import autoComplete from "../../utils/searchSuggetions";
 
@@ -18,68 +18,141 @@ const ourRateRef = React.createRef(null);
 const rateRef = React.createRef(null);
 const discountTypeRef = React.createRef(null);
 
-export default function ImportBillUpdateContent({data}) {
-  const { HomeProductData } = useContext(DataContext);
+export default function ImportBillUpdateContent({ data }) {
+  const { HomeProductData, importBill, setHomeProductData, setImportBill } =
+    useContext(DataContext);
   const api = useAxios();
-  const urlId = data.id
+  const urlId = data.id;
   function handleImportSumbit(e) {
     e.preventDefault();
     const data = {
       productName: e.target.productName.value,
       buy: Number(e.target.productBuy.value),
       quantity: Number(e.target.productQuantity.value),
-      discount:Number(e.target.productDiscount.value),
+      discount: Number(e.target.productDiscount.value),
       kg: Number(e.target.productKg.value),
       rate: Number(e.target.productRate.value),
       ourRate: Number(e.target.productOurRate.value),
       date: e.target.productDate.value,
       discountType: e.target.productDiscountType.value,
     };
-    const myPromise = api.patch(`/import_bill/${urlId}/`, data);
+    const myPromise = api.patch(`/import_bill/${urlId}/`, data).then((res) => {
+      const responseData = res.data;
+      if (responseData.id === responseData.product.latest_bill_id) {
+        HomeProductData.forEach((item, i) => {
+          if (item.id === responseData.product.id) {
+            HomeProductData[i] = responseData.product
+            setHomeProductData([...HomeProductData])
+            return;
+          }
+        });
+      }
+
+      const parsedBill = parseDataImport([responseData])[0];
+      let brk = false;
+      let updated = false;
+      importBill.forEach((item, i) => {
+        item.bill.forEach((innerItem, innerI) => {
+          if (innerItem.id === responseData.id) {
+            if (innerItem.import_date === responseData.import_date) {
+              importBill[i].bill[innerI] = responseData;
+              setImportBill([...importBill]);
+              brk = true;
+              updated = true;
+              return;
+            } else {
+              importBill[i].bill.splice(
+                importBill[i].bill.indexOf(importBill[i].bill[innerI]),
+                1
+              );
+              brk = true;
+              return;
+            }
+          }
+        });
+        if (brk) {
+          return;
+        }
+      });
+      if (!updated) {
+        let isDateInImport = false;
+        importBill.forEach((item) => {
+          if (item.date === parsedBill.date) {
+            item.bill.unshift(parsedBill.bill[0]);
+            isDateInImport = true;
+            setImportBill([...importBill]);
+            return;
+          }
+        });
+        if (!isDateInImport) {
+          setImportBill((prev) => [parsedBill, ...prev]);
+        }
+      }
+    });
     savedBillToast(myPromise);
   }
-  const product = useMemo(()=>{
-    let productlist=[];
-    HomeProductData.forEach(item=>{
-      productlist.push(item.product_name)
-    })
-    return productlist
-  },[HomeProductData])
-  useEffect(()=>{
-    autoComplete(document.getElementById("import-product-name"), product)
-  },[product])
-  useEffect(()=>{
-    document.getElementById("import-product-name").value = data.product?.product_name
-    document.getElementById("import-product-buy").value = data.total_price
-    document.getElementById("import-product-discount").value = data.discount_rate?.toFixed(2)
-    document.getElementById("import-product-quantity").value = data.amount_in_pcs
-    document.getElementById("import-product-kg").value = data.amount_in_kg
-    document.getElementById("import-product-rate").value = data.rate
-    document.getElementById("import-product-ourrate").value = data.our_rate
-    document.getElementById("import-product-date").value = data.import_date
-    discountTypeRef.current.value= "Rs"
-  },[data])
+  const product = useMemo(() => {
+    let productlist = [];
+    HomeProductData.forEach((item) => {
+      productlist.push(item.product_name);
+    });
+    return productlist;
+  }, [HomeProductData]);
+  useEffect(() => {
+    autoComplete(document.getElementById("import-product-name"), product);
+  }, [product]);
+  useEffect(() => {
+    document.getElementById("import-product-name").value =
+      data.product?.product_name;
+    document.getElementById("import-product-buy").value = data.total_price;
+    document.getElementById("import-product-discount").value =
+      data.discount_rate?.toFixed(2);
+    document.getElementById("import-product-quantity").value =
+      data.amount_in_pcs;
+    document.getElementById("import-product-kg").value = data.amount_in_kg;
+    document.getElementById("import-product-rate").value = data.rate;
+    document.getElementById("import-product-ourrate").value = data.our_rate;
+    document.getElementById("import-product-date").value = data.import_date;
+    discountTypeRef.current.value = "Rs";
+  }, [data]);
   return (
     <>
       <section className="import mt-2">
         <div className="container px-1">
           <div className="import-input-box">
             <form autoComplete="off" onSubmit={handleImportSumbit}>
-              <EntryLabelName {...productNameInput} defaultValue={data.product?.product_name} />
+              <EntryLabelName
+                {...productNameInput}
+                defaultValue={data.product?.product_name}
+              />
 
-              <EntryPrice {...productBuyPrice} defaultValue={data.total_price} />
+              <EntryPrice
+                {...productBuyPrice}
+                defaultValue={data.total_price}
+              />
 
-              <EntryInputSelectBtn {...productDiscount} defaultValue={data.discount_rate}/>
+              <EntryInputSelectBtn
+                {...productDiscount}
+                defaultValue={data.discount_rate}
+              />
 
-              <EntryInputBtn {...productQuantity} defaultValue1={data.amount_in_pcs} defaultValue2={data.amount_in_kg}/>
+              <EntryInputBtn
+                {...productQuantity}
+                defaultValue1={data.amount_in_pcs}
+                defaultValue2={data.amount_in_kg}
+              />
 
-              <EntryPrice {...productRate} defaultValue={data.rate}/>
+              <EntryPrice {...productRate} defaultValue={data.rate} />
 
-              <EntryPrice {...productOurRate} defaultValue={data.our_rate}/>
+              <EntryPrice {...productOurRate} defaultValue={data.our_rate} />
 
               <EntryDate defaultValue={data.import_date} default={true} />
 
-              <button id="updateimportbillform" type="sumbit" className="d-none"></button>
+              <button
+                id="updateimportbillform"
+                type="sumbit"
+                className="d-none"
+              ></button>
             </form>
           </div>
         </div>
@@ -123,7 +196,7 @@ const productNameInput = {
     placeHolder: "Product Name...",
     name: "productName",
     id: "import-product-name",
-    readOnly:true
+    readOnly: true,
   },
   selection: {
     menu: ["New", "Old"],

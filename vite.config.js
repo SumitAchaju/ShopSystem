@@ -45,7 +45,7 @@ export default defineConfig({
             }
           },
           {
-            urlPattern: "https://sita-store/vite.svg",
+            urlPattern: "https://sita-store.netlify.app/vite.svg",
             handler: 'CacheFirst',
             options:{
               cacheName:"icon-cache",

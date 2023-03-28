@@ -9,7 +9,7 @@ export default function BillFilter({
   setFilterBtnStatus,
   inputRef,
   setShowSpinner,
-  filterBtnStatus
+  filterBtnStatus,
 }) {
   const [selectMode, setSelectMode] = useState("day");
   const [year, setYear] = useState(() => new Date().getFullYear());
@@ -31,7 +31,7 @@ export default function BillFilter({
     setShowSpinner(true);
     inputRef.current.value = "";
   }
-  function useEffectFunction(){
+  function useEffectFunction() {
     let date;
 
     if (selectMode === "year") date = [year.toString()];
@@ -42,9 +42,9 @@ export default function BillFilter({
     const newBill = filterBillCustomDate(bill, date, selectMode);
     setBillData(newBill);
   }
-  useEffect(()=>{
-    if(filterBtnStatus==="filter") useEffectFunction()
-  },[bill])
+  useEffect(() => {
+    if (filterBtnStatus === "filter") useEffectFunction();
+  }, [bill]);
 
   return (
     <>

@@ -13,47 +13,45 @@ export default function BillSettings({
   filterBtnStatus,
   setFilterBtnStatus,
   setShowSpinner,
-  inputRef
+  inputRef,
 }) {
-
-  function resetLimit(){
-    setLimit(initialLimit)
+  function resetLimit() {
+    setLimit(initialLimit);
   }
   function changeTabSales() {
     if (tab === "import") {
       setTab("sales");
-      if(filterBtnStatus==="search"||filterBtnStatus==="filter"){
-        setFilterBtnStatus("week")
-        inputRef.current.value=""
-        setBillData(filterBillDate(bill.salesBillData, "week"))
-      }
-      else{
+      if (filterBtnStatus === "search" || filterBtnStatus === "filter") {
+        setFilterBtnStatus("week");
+        inputRef.current.value = "";
+        setBillData(filterBillDate(bill.salesBillData, "week"));
+      } else {
         setBillData(filterBillDate(bill.salesBillData, filterBtnStatus));
       }
-      resetLimit()
-      setShowSpinner(true)
+      resetLimit();
+      setShowSpinner(true);
     }
   }
   function changeTabImport() {
     if (tab === "sales") {
       setTab("import");
-      if(filterBtnStatus==="search"||filterBtnStatus==="filter"){
-        setFilterBtnStatus("week")
-        inputRef.current.value=""
+      if (filterBtnStatus === "search" || filterBtnStatus === "filter") {
+        setFilterBtnStatus("week");
+        inputRef.current.value = "";
         setBillData(filterBillDate(bill.importBillData, "week"));
-      }
-      else{
+      } else {
         setBillData(filterBillDate(bill.importBillData, filterBtnStatus));
       }
-      resetLimit()
-      setShowSpinner(true)
+      resetLimit();
+      setShowSpinner(true);
     }
   }
-  function searchBill(search){
+  function searchBill(search) {
     const newBill = [];
     billStatus.forEach((item) => {
       const isInBill = item.bill.filter(
-        (innerItem) => innerItem.product.product_name.toLowerCase().includes(search) === true
+        (innerItem) =>
+          innerItem.product.product_name.toLowerCase().includes(search) === true
       );
       if (isInBill.length != 0) {
         newBill.push({
@@ -63,41 +61,42 @@ export default function BillSettings({
       }
     });
     setBillData(newBill);
-    setFilterBtnStatus("search")
-    resetLimit()
+    setFilterBtnStatus("search");
+    resetLimit();
   }
   function handleBillSearch(e) {
     e.preventDefault();
     const search = e.target.billSearch.value.toLowerCase();
-    searchBill(search)
-    setShowSpinner(true)
+    searchBill(search);
+    setShowSpinner(true);
   }
   function setBillDay() {
     setBillData(filterBillDate(billStatus, "day"));
     setFilterBtnStatus("day");
-    inputRef.current.value=""
-    resetLimit()
-    setShowSpinner(true)
+    inputRef.current.value = "";
+    resetLimit();
+    setShowSpinner(true);
   }
   function setBillWeek() {
     setBillData(filterBillDate(billStatus, "week"));
     setFilterBtnStatus("week");
-    inputRef.current.value=""
-    resetLimit()
-    setShowSpinner(true)
+    inputRef.current.value = "";
+    resetLimit();
+    setShowSpinner(true);
   }
   function setBillMonth() {
     setBillData(filterBillDate(billStatus, "month"));
     setFilterBtnStatus("month");
-    inputRef.current.value=""
-    resetLimit()
-    setShowSpinner(true)
+    inputRef.current.value = "";
+    resetLimit();
+    setShowSpinner(true);
   }
-  function searchUseEffectFunction(search){
+  function searchUseEffectFunction(search) {
     const newBill = [];
     billStatus.forEach((item) => {
       const isInBill = item.bill.filter(
-        (innerItem) => innerItem.product.product_name.toLowerCase().includes(search) === true
+        (innerItem) =>
+          innerItem.product.product_name.toLowerCase().includes(search) === true
       );
       if (isInBill.length != 0) {
         newBill.push({
@@ -108,35 +107,36 @@ export default function BillSettings({
     });
     setBillData(newBill);
   }
-  useEffect(()=>{
-    if (filterBtnStatus == "filter"){
-      return
+  useEffect(() => {
+    if (filterBtnStatus == "filter") {
+      return;
+    } else if (filterBtnStatus === "search") {
+      searchUseEffectFunction(inputRef.current.value.toLowerCase());
+    } else {
+      setBillData(filterBillDate(billStatus, `${filterBtnStatus}`));
     }
-    else if (filterBtnStatus === 'search'){
-      searchUseEffectFunction(inputRef.current.value.toLowerCase())
-    }
-    else{
-
-      setBillData(filterBillDate(billStatus, `${filterBtnStatus}`))
-    }
-  },[bill])
+  }, [bill]);
   return (
     <>
       <section className="billsetting pt-4 pb-3">
         <div className="container px-4">
           <div className="import-sales-btn">
             <div className="row">
-              <div className={tab==="import"?"col-6 active" :"col-6"}>
+              <div className={tab === "import" ? "col-6 active" : "col-6"}>
                 <button onClick={changeTabImport}>Import</button>
               </div>
-              <div className={tab==="sales"?"col-6 active" :"col-6"}>
+              <div className={tab === "sales" ? "col-6 active" : "col-6"}>
                 <button onClick={changeTabSales}>Sales</button>
               </div>
             </div>
           </div>
           <div className="bill-search my-3">
             <form onSubmit={handleBillSearch}>
-              <Search inputRef={inputRef} placeHolder="Search Bill" inputName="billSearch" />
+              <Search
+                inputRef={inputRef}
+                placeHolder="Search Bill"
+                inputName="billSearch"
+              />
             </form>
           </div>
           <div className="filter-date">

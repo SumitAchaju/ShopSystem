@@ -1,13 +1,13 @@
-import React, { useContext } from "react"
-import AuthContext from "../context/Auth"
+import React, { useContext } from "react";
+import AuthContext from "../context/Auth";
 import { Navigate } from "react-router-dom";
 
-export default function Login () {
-    const {loginUser,loginStatus} = useContext(AuthContext)
+export default function Login() {
+  const { loginUser, loginStatus } = useContext(AuthContext);
 
-    if (loginStatus) {
-        return <Navigate to="/" />;
-      }
+  if (loginStatus) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="Auth-form-container">
@@ -40,5 +40,5 @@ export default function Login () {
         </div>
       </form>
     </div>
-  )
+  );
 }

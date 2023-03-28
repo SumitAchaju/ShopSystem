@@ -11,7 +11,7 @@ import { NavLink, Outlet, ScrollRestoration } from "react-router-dom";
 export default function Navbar() {
   return (
     <>
-      <Outlet/>
+      <Outlet />
       <section className="navbarsticky">
         <div className="container-fluid">
           <div className="d-flex justify-content-between align-items-end">

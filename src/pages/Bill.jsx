@@ -6,7 +6,7 @@ import BillFilter from "../components/bill/BillFilter";
 import DataContext from "../context/Data";
 
 export default function Bill() {
-  const {importBill,salesBill} = useContext(DataContext)
+  const { importBill, salesBill } = useContext(DataContext);
   const [tab, setTab] = useState("import");
   const [filterBtnStatus, setFilterBtnStatus] = useState("week");
   const initialLimit = 10;
@@ -17,14 +17,14 @@ export default function Bill() {
   const bill = useMemo(() => {
     if (tab === "import") return importBill;
     else if (tab === "sales") return salesBill;
-  }, [tab,importBill,salesBill]);
+  }, [tab, importBill, salesBill]);
 
-  const allBill = useMemo(()=>{
+  const allBill = useMemo(() => {
     return {
-      importBillData:importBill,
-    salesBillData:salesBill
-    }
-  },[importBill,salesBill])
+      importBillData: importBill,
+      salesBillData: salesBill,
+    };
+  }, [importBill, salesBill]);
 
   const [billData, setBillData] = useState(() => filterBillDate(bill, "week"));
 

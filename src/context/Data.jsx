@@ -7,7 +7,7 @@ export default DataContext;
 
 export function DataProvider({ children }) {
   const api = useAxios();
-  const {loginStatus,authToken} = useContext(AuthContext)
+  const { loginStatus, authToken } = useContext(AuthContext);
   const [HomeProductData, setHomeProductData] = useState([]);
   const [importBill, setImportBill] = useState();
   const [salesBill, setSalesBill] = useState();
@@ -25,20 +25,19 @@ export function DataProvider({ children }) {
       setSalesBill(parsedDataSales);
       setGetAllData(true);
     }
-    if(loginStatus){
-      getData()
+    if (loginStatus) {
+      getData();
+    } else {
+      setGetAllData(true);
     }
-    else{
-      setGetAllData(true)
-    }
-  }, [loginStatus,authToken]);
+  }, [loginStatus, authToken]);
   const value = {
     HomeProductData,
     importBill,
     salesBill,
     setImportBill,
     setSalesBill,
-    setHomeProductData
+    setHomeProductData,
   };
   return (
     <DataContext.Provider value={value}>

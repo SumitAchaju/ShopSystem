@@ -1,6 +1,13 @@
 import React from "react";
 
-export default function PopUpModal({ id, Content, data, setSumbit, title,setUpdate }) {
+export default function PopUpModal({
+  id,
+  Content,
+  data,
+  setSumbit,
+  title,
+  setUpdate,
+}) {
   return (
     <div>
       {/* Modal */}
@@ -27,7 +34,7 @@ export default function PopUpModal({ id, Content, data, setSumbit, title,setUpda
                 data-bs-dismiss="modal"
                 type="sumbit"
                 className="btn btn-success fs-5 px-4 active-btn"
-                onClick={setUpdate?setUpdate:null}
+                onClick={setUpdate ? setUpdate : null}
               >
                 Save
               </button>
@@ -108,6 +115,8 @@ export function ProductUpdateContent({ data }) {
   return (
     <>
       <div className="row fs-5">
+        <div className="col-6 mb-3">Product Name:</div>
+        <div className="col-6 mb-3">{data.productName}</div>
         <div className="col-6 mb-3">Price:</div>
         <div className="col-6 mb-3">{data.price}</div>
         <div className="col-6 mb-3">Increment:</div>

@@ -6,7 +6,6 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export function AuthProvider({ children }) {
-  
   const [loginStatus, setloginStatus] = useState(() =>
     localStorage.getItem("token") ? true : false
   );
@@ -16,12 +15,12 @@ export function AuthProvider({ children }) {
       ? JSON.parse(localStorage.getItem("token"))
       : null
   );
-  
-  const baseURL = "http://192.168.0.112:8000"
+
+  const baseURL = "http://192.168.0.103:8000";
 
   const loginUser = async (e) => {
     e.preventDefault();
-    console.log("work")
+    console.log("work");
     try {
       let response = await axios.post(`${baseURL}/api/token/`, {
         username: `${e.target.username.value}`,
@@ -37,9 +36,9 @@ export function AuthProvider({ children }) {
       }
     } catch (error) {
       if (error.response.status === 401) {
-        console.log("wrong username or password")
+        console.log("wrong username or password");
       } else {
-        console.log("something went wrong")
+        console.log("something went wrong");
       }
       e.target.username.value = "";
       e.target.password.value = "";
@@ -55,7 +54,7 @@ export function AuthProvider({ children }) {
   let contextData = {
     loginStatus: loginStatus,
     authToken: authToken,
-    baseURL:baseURL,
+    baseURL: baseURL,
     setAuthToken: setAuthToken,
     loginUser: loginUser,
     logoutUser: logoutUser,

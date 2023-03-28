@@ -41,8 +41,8 @@ export default function ImportBillUpdateContent({ data }) {
       if (responseData.id === responseData.product.latest_bill_id) {
         HomeProductData.forEach((item, i) => {
           if (item.id === responseData.product.id) {
-            HomeProductData[i] = responseData.product
-            setHomeProductData([...HomeProductData])
+            HomeProductData[i] = responseData.product;
+            setHomeProductData([...HomeProductData]);
             return;
           }
         });

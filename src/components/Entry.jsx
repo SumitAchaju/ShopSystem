@@ -107,7 +107,7 @@ export function EntryDate(props) {
           name="productDate"
           id="import-product-date"
           ref={dateInputRef}
-          defaultValue={props.default?props.defaultValue:currentDate}
+          defaultValue={props.default ? props.defaultValue : currentDate}
         />
       </div>
       <div className="col-3">
@@ -122,7 +122,7 @@ export function EntryHeading({ title }) {
     <>
       <section
         className="entry-heading bg-light mb-4"
-        style={{ position: "sticky", left: "0", top: "0",zIndex:"999" }}
+        style={{ position: "sticky", left: "0", top: "0", zIndex: "999" }}
       >
         <div
           style={{
@@ -131,34 +131,32 @@ export function EntryHeading({ title }) {
           }}
           className=" d-flex align-items-center  justify-content-center color-brand"
         >
-          <h2 style={{ fontSize: "30px" }}>
-            {title}
-          </h2>
+          <h2 style={{ fontSize: "30px" }}>{title}</h2>
         </div>
       </section>
     </>
   );
 }
 
-export function EntrySelection(props){
-  return(
+export function EntrySelection(props) {
+  return (
     <Row>
-    <div className="col-3">
-      <Label {...props.label} />
-    </div>
-    <div className="col-5">
-      <Selection {...props.selection} />
-    </div>
-  </Row>
-  )
+      <div className="col-3">
+        <Label {...props.label} />
+      </div>
+      <div className="col-5">
+        <Selection {...props.selection} />
+      </div>
+    </Row>
+  );
 }
 
-export function EntryProductSuggestions(props){
-  return(
-  <datalist id={props.id}>
-    {props.product.map(item=>
-      <option key={item.id} value={item.product_name}/>
-      )}
-</datalist>
-  )
+export function EntryProductSuggestions(props) {
+  return (
+    <datalist id={props.id}>
+      {props.product.map((item) => (
+        <option key={item.id} value={item.product_name} />
+      ))}
+    </datalist>
+  );
 }

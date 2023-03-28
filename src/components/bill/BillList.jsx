@@ -77,7 +77,11 @@ export default function BillList({
                         />
                       ))
                     : item.bill.map((innerItem) => (
-                        <SalesBillBox {...innerItem} key={innerItem.id} setData={setPopUpData} />
+                        <SalesBillBox
+                          {...innerItem}
+                          key={innerItem.id}
+                          setData={setPopUpData}
+                        />
                       ))}
                 </div>
               ))}
@@ -103,7 +107,9 @@ export default function BillList({
         title={"Update Bill"}
         id={`${tab}billupdatemodal`}
         data={popUpData}
-        Content={tab==="import"?ImportBillUpdateContent:SalesBillUpdateContent}
+        Content={
+          tab === "import" ? ImportBillUpdateContent : SalesBillUpdateContent
+        }
         setUpdate={sumbitForm}
       />
     </>

@@ -12,7 +12,7 @@ import DataContext, { parseDataSales } from "../context/Data";
 import autoComplete from "../utils/searchSuggetions";
 
 export default function Sales() {
-  const {HomeProductData,salesBill,setSalesBill} = useContext(DataContext)
+  const { HomeProductData, salesBill, setSalesBill } = useContext(DataContext);
   const api = useAxios();
   const [popUpData, setPopUpData] = useState({});
   const [sumbit, setSumbit] = useState(false);
@@ -30,37 +30,35 @@ export default function Sales() {
       setSumbit(true);
       return;
     }
-    const myPromise = api
-      .post("/sales_bill/", data)
-      .then((res) =>{
-        const responseData = res.data;
-        const parsedBill = parseDataSales([responseData])[0];
-        let isDateInSales = false;
-        salesBill.forEach((item) => {
-          if (item.date === parsedBill.date) {
-            item.bill.unshift(parsedBill.bill[0]);
-            isDateInSales = true;
-            setSalesBill(salesBill);
-            return
-          }
-        });
-        if (!isDateInSales) {
-          setSalesBill((prev) => [parsedBill, ...prev]);
+    const myPromise = api.post("/sales_bill/", data).then((res) => {
+      const responseData = res.data;
+      const parsedBill = parseDataSales([responseData])[0];
+      let isDateInSales = false;
+      salesBill.forEach((item) => {
+        if (item.date === parsedBill.date) {
+          item.bill.unshift(parsedBill.bill[0]);
+          isDateInSales = true;
+          setSalesBill(salesBill);
+          return;
         }
-      } );
+      });
+      if (!isDateInSales) {
+        setSalesBill((prev) => [parsedBill, ...prev]);
+      }
+    });
     savedBillToast(myPromise);
     setSumbit(false);
   }
-  const product = useMemo(()=>{
-    let productlist=[];
-    HomeProductData.forEach(item=>{
-      productlist.push(item.product_name)
-    })
-    return productlist
-  },[HomeProductData])
-  useEffect(()=>{
-    autoComplete(document.getElementById("sales-product-name"), product)
-  },[product])
+  const product = useMemo(() => {
+    let productlist = [];
+    HomeProductData.forEach((item) => {
+      productlist.push(item.product_name);
+    });
+    return productlist;
+  }, [HomeProductData]);
+  useEffect(() => {
+    autoComplete(document.getElementById("sales-product-name"), product);
+  }, [product]);
   return (
     <>
       <EntryHeading title="Sales Entry" />

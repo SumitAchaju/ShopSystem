@@ -5,32 +5,35 @@ import { useContext } from "react";
 import AuthContext from "../context/Auth";
 
 function useAxios() {
-  const { authToken, setAuthToken,baseURL  } = useContext(AuthContext);
+  const { authToken, setAuthToken, baseURL } = useContext(AuthContext);
 
   const axiosInstance = axios.create({
     baseURL,
     headers: { Authorization: `Bearer ${authToken?.access}` },
   });
 
-  axiosInstance.interceptors.request.use(async (req) => {
-    const user = jwt_decode(authToken.access);
-    const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+  axiosInstance.interceptors.request.use(
+    async (req) => {
+      const user = jwt_decode(authToken.access);
+      const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
 
-    if (!isExpired) return req;
+      if (!isExpired) return req;
 
-    const response = await axios.post(`${baseURL}/api/token/refresh/`, {
-      refresh: authToken.refresh,
-    });
+      const response = await axios.post(`${baseURL}/api/token/refresh/`, {
+        refresh: authToken.refresh,
+      });
 
-    localStorage.setItem("token", JSON.stringify(response.data));
+      localStorage.setItem("token", JSON.stringify(response.data));
 
-    setAuthToken(response.data);
+      setAuthToken(response.data);
 
-    req.headers.Authorization = `Bearer ${response.data.access}`;
-    return req;
-  },{ synchronous: true });
+      req.headers.Authorization = `Bearer ${response.data.access}`;
+      return req;
+    },
+    { synchronous: true }
+  );
 
   return axiosInstance;
-};
+}
 
 export default useAxios;

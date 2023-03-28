@@ -11,10 +11,11 @@ const salesRef = React.createRef();
 const incrementRef = React.createRef();
 const inStockRef = React.createRef();
 const salesUnitRef = React.createRef();
+const productNameRef = React.createRef();
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const { HomeProductData,setHomeProductData } = useContext(DataContext);
+  const { HomeProductData, setHomeProductData } = useContext(DataContext);
   const [editStatus, setEditStatus] = useState(false);
   const [showD, setDShow] = useState("%");
   const [showI, setIShow] = useState("%");
@@ -26,8 +27,8 @@ export default function ProductDetail() {
   );
   function confirmUpdate() {
     setEditStatus(true);
-    if(editStatus===false){
-      return
+    if (editStatus === false) {
+      return;
     }
     setPopUpData({
       price: salesRef.current.value,
@@ -35,6 +36,7 @@ export default function ProductDetail() {
       incrementType: showI,
       inStock: inStockRef.current.value,
       salesUnit: salesUnitRef.current.value,
+      productName: productNameRef.current.value,
     });
     new bootstrap.Modal("#productupdate").show();
   }
@@ -49,18 +51,19 @@ export default function ProductDetail() {
       in_stock: e.target.inStock.value,
       sales_unit: e.target.salesUnit.value,
       show: showI,
+      product_name: e.target.productName.value,
     };
     const myPromise = api
       .patch(`/product/${ProductData.id}/`, data)
       .then((res) => {
-        const responseData = res.data
-        HomeProductData.forEach((item,i)=>{
-          if(item.id === responseData.id){
-            HomeProductData[i] = responseData
-            setHomeProductData([...HomeProductData])
-            return
+        const responseData = res.data;
+        HomeProductData.forEach((item, i) => {
+          if (item.id === responseData.id) {
+            HomeProductData[i] = responseData;
+            setHomeProductData([...HomeProductData]);
+            return;
           }
-        })
+        });
       });
     savedBillToast(myPromise);
   }
@@ -128,8 +131,22 @@ export default function ProductDetail() {
                     </span>
                   </li>
                   <li>
-                    <span>Rate:</span>
-                    <span>Rs {ProductData.rate}</span>
+                    {editStatus ? (
+                      <>
+                        <span>Product Name:</span>
+                        <input
+                          type="text"
+                          name="productName"
+                          ref={productNameRef}
+                          defaultValue={ProductData.product_name}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <span>Rate:</span>
+                        <span>Rs {ProductData.rate}</span>
+                      </>
+                    )}
                   </li>
                   <li>
                     <span>OurRate:</span>
@@ -227,7 +244,7 @@ function SpanOrInput({
           defaultValue={parseData}
           onChange={onChangeFunction}
           min="0"
-          step='0.01'
+          step="0.01"
         />
       ) : (
         <span>
@@ -263,7 +280,7 @@ function PercentageOrRate({
             defaultValue={data}
             ref={forwardRef}
             onChange={onChange}
-            style={{width:"70%"}}
+            style={{ width: "70%" }}
             min="0"
             step={"0.01"}
           />

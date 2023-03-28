@@ -67,7 +67,7 @@ export default function Import() {
           item.bill.unshift(parsedBill.bill[0]);
           isDateInImport = true;
           setImportBill(importBill);
-          return
+          return;
         }
       });
       if (!isDateInImport) {

@@ -36,7 +36,7 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: new RegExp('^https://sumitshop.pythonanywhere.com'),
-            handler: 'StaleWhileRevalidate',
+            handler: 'NetworkFirst',
             options:{
               cacheName:"api-cache",
               cacheableResponse:{

@@ -108,7 +108,7 @@ export default function ProductDetail() {
                     <span>Sales:</span>
                     <SpanOrInput
                       editStatus={editStatus}
-                      data={ProductData.price}
+                      data={ProductData.price.toFixed(2)}
                       name="salesPrice"
                       type={"number"}
                       forwardRef={salesRef}

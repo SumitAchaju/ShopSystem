@@ -52,7 +52,7 @@ export default function HomeProduct({
                       <div className="row">
                         <div className="col-6">
                           <p>
-                            Price: <span>{item.price}</span>
+                            Price: <span>{item.price.toFixed(2)}</span>
                           </p>
                         </div>
                         <div className="col-6">

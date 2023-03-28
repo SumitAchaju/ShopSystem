@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
       : null
   );
 
-  const baseURL = "http://192.168.0.103:8000";
+  const baseURL = "https://sumitshop.pythonanywhere.com";
 
   const loginUser = async (e) => {
     e.preventDefault();

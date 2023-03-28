@@ -35,7 +35,7 @@ export default defineConfig({
         skipWaiting: true,
         runtimeCaching: [
           {
-            urlPattern: new RegExp('^http://192.168.0.103:8000'),
+            urlPattern: new RegExp('^https://sumitshop.pythonanywhere.com'),
             handler: 'CacheFirst',
             options:{
               cacheName:"api-cache",

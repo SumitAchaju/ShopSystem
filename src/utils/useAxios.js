@@ -19,10 +19,12 @@ function useAxios() {
 
       if (!isExpired) return req;
 
+      if(!window.navigator.onLine){
+        return req
+      }
       const response = await axios.post(`${baseURL}/api/token/refresh/`, {
         refresh: authToken.refresh,
       });
-
       localStorage.setItem("token", JSON.stringify(response.data));
 
       setAuthToken(response.data);

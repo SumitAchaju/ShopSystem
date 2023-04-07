@@ -55,6 +55,17 @@ export default function Import() {
     }
     const myPromise = api.post(`/import_bill/`, data).then((res) => {
       const responseData = res.data;
+
+      if(res.status === 201){
+        const elements = Array.from(e.target)
+        const inputs = elements.filter((element)=>element.tagName.toLowerCase()==="input")
+        inputs.forEach((element)=>{
+          if (!(element.type === "date")){
+            element.value = ""
+          }
+        })
+      }
+
       if (
         !HomeProductData.find((item) => item.id === responseData.product.id)
       ) {
@@ -169,6 +180,19 @@ function onChangeHandler() {
   let incrementAmount =
     incrementType === "%" ? (increment / 100) * ourRate : increment;
   productPriceRef.current.value = (incrementAmount + ourRate).toFixed(2);
+}
+
+function onSalesPriceChange(){
+  const ourRate = ourRateRef.current.value
+  if ( ourRate === ""){
+    return
+  }
+  const sales = Number(productPriceRef.current.value)
+  let incrementType = incrementTypeRef.current.value;
+  let incrementAmount =
+    incrementType === "%" ? ((sales-ourRate) / 100) * ourRate : sales-ourRate;
+  incrementInputRef.current.value = (incrementAmount).toFixed(2);
+
 }
 
 const productNameInput = {
@@ -292,8 +316,8 @@ const productIncrementPrice = {
     placeHolder: "",
     name: "productPrice",
     id: "import-product-price",
-    readOnly: true,
     ref: productPriceRef,
+    onChange: onSalesPriceChange,
   },
 };
 const productIncrement = {

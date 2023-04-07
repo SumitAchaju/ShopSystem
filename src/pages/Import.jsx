@@ -190,7 +190,7 @@ function onSalesPriceChange(){
   const sales = Number(productPriceRef.current.value)
   let incrementType = incrementTypeRef.current.value;
   let incrementAmount =
-    incrementType === "%" ? ((sales-ourRate) / 100) * ourRate : sales-ourRate;
+    incrementType === "%" ? ((sales-ourRate) * 100) / ourRate : sales-ourRate;
   incrementInputRef.current.value = (incrementAmount).toFixed(2);
 
 }

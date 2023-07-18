@@ -20,7 +20,6 @@ export function AuthProvider({ children }) {
 
   const loginUser = async (e) => {
     e.preventDefault();
-    console.log("work");
     try {
       let response = await axios.post(`${baseURL}/api/token/`, {
         username: `${e.target.username.value}`,

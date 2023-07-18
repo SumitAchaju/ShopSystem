@@ -54,6 +54,26 @@ export default defineConfig({
               }
             }
           },
+          {
+            urlPattern: "https://sita-store.netlify.app/bootstrap/js/bootstrap.bundle.min.js",
+            handler: 'CacheFirst',
+            options:{
+              cacheName:"bootstrap-script-cache",
+              cacheableResponse:{
+                statuses:[0,200]
+              }
+            }
+          },
+          {
+            urlPattern: "https://sita-store.netlify.app/bootstrap/css/bootstrap.min.css",
+            handler: 'CacheFirst',
+            options:{
+              cacheName:"bootstrap-css-cache",
+              cacheableResponse:{
+                statuses:[0,200]
+              }
+            }
+          },
         ],}
     })
   ],

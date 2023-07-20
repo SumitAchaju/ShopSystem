@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import DataContext from "../context/Data";
+import { SearchIcon } from "../assets/icons/Icon";
 
 export default function ProductSearch() {
   const { HomeProductData } = useContext(DataContext);
@@ -72,7 +73,7 @@ export function Search(props) {
             className="border-0 d-block rounded-circle"
             type="sumbit"
           >
-            <i className="bi bi-search"></i>
+            <SearchIcon/>
           </button>
         </div>
       </div>

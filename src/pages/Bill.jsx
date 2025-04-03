@@ -32,7 +32,7 @@ export default function Bill() {
     let total = 0;
     billData.forEach((item) => {
       item.bill.forEach((innerItem) => {
-        total += Number(innerItem.profit);
+        total += Number(innerItem.total_profit);
       });
     });
     return total.toFixed(2);

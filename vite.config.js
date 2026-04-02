@@ -8,73 +8,89 @@ export default defineConfig({
     react(),
     VitePWA({
       manifest: {
-        "name": "Sita Store",
-        "short_name": "Shop",
-        "icons": [
+        name: "Sita Store",
+        short_name: "Shop",
+        icons: [
           {
-            "src": "icon-192.png",
-            "sizes": "192x192",
-            "type": "image/png"
+            src: "icon-192.png",
+            sizes: "192x192",
+            type: "image/png",
           },
           {
-            "src": "icon-512.png",
-            "sizes": "512x512",
-            "type": "image/png",
+            src: "icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
           },
         ],
-        "start_url": ".",
-        "background_color": "#ffffff",
-        "theme_color": "#424242",
-        "display": "standalone",
-        "description": "Sita Store Of Kitchen products",
-        "scope":"/"
-      }
-      ,
+        screenshots: [
+          {
+            src: "/screenshots/mobile-1.png",
+            sizes: "540x720",
+            type: "image/png",
+            form_factor: "narrow",
+          },
+          {
+            src: "/screenshots/desktop-1.png",
+            sizes: "1280x720",
+            type: "image/png",
+            form_factor: "wide",
+          },
+        ],
+        start_url: ".",
+        background_color: "#ffffff",
+        theme_color: "#424242",
+        display: "standalone",
+        description: "Sita Store Of Kitchen products",
+        scope: "/",
+      },
       workbox: {
         clientsClaim: true,
         skipWaiting: true,
         runtimeCaching: [
           {
-            urlPattern: new RegExp('^https://sumitshop.pythonanywhere.com'),
-            handler: 'StaleWhileRevalidate',
-            options:{
-              cacheName:"api-cache",
-              cacheableResponse:{
-                statuses:[0,200]
-              }
-            }
+            urlPattern: new RegExp("^https://sumitaachaju.pythonanywhere.com"),
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "api-cache",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
           },
           {
             urlPattern: "https://sita-store.netlify.app/vite.svg",
-            handler: 'CacheFirst',
-            options:{
-              cacheName:"icon-cache",
-              cacheableResponse:{
-                statuses:[0,200]
-              }
-            }
+            handler: "CacheFirst",
+            options: {
+              cacheName: "icon-cache",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
           },
           {
-            urlPattern: "https://sita-store.netlify.app/bootstrap/js/bootstrap.bundle.min.js",
-            handler: 'CacheFirst',
-            options:{
-              cacheName:"bootstrap-script-cache",
-              cacheableResponse:{
-                statuses:[0,200]
-              }
-            }
+            urlPattern:
+              "https://sita-store.netlify.app/bootstrap/js/bootstrap.bundle.min.js",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "bootstrap-script-cache",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
           },
           {
-            urlPattern: "https://sita-store.netlify.app/bootstrap/css/bootstrap.min.css",
-            handler: 'CacheFirst',
-            options:{
-              cacheName:"bootstrap-css-cache",
-              cacheableResponse:{
-                statuses:[0,200]
-              }
-            }
+            urlPattern:
+              "https://sita-store.netlify.app/bootstrap/css/bootstrap.min.css",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "bootstrap-css-cache",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
           },
-        ],}
-    })
+        ],
+      },
+    }),
   ],
 });

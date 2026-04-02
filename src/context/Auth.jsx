@@ -7,16 +7,16 @@ export default AuthContext;
 
 export function AuthProvider({ children }) {
   const [loginStatus, setloginStatus] = useState(() =>
-    localStorage.getItem("token") ? true : false
+    localStorage.getItem("token") ? true : false,
   );
 
   const [authToken, setAuthToken] = useState(() =>
     localStorage.getItem("token")
       ? JSON.parse(localStorage.getItem("token"))
-      : null
+      : null,
   );
 
-  const baseURL = "https://sumitshop.pythonanywhere.com";
+  const baseURL = "https://sumitaachaju.pythonanywhere.com";
 
   const loginUser = async (e) => {
     e.preventDefault();
